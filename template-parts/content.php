@@ -54,6 +54,7 @@
 				'after'  => '</div>',
 			)
 		);
+		
 		?>
 	</div><!-- .entry-content -->
 

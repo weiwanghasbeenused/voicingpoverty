@@ -56,4 +56,50 @@ if( $isHome )
 		</footer><!-- .entry-footer -->
 	<?php endif; ?>
 </article><!-- #post-<?php the_ID(); ?> -->
-<? get_child_pages(); ?>
+<? 
+$bracket_pattern = '/\[.*?\]/g';
+$children = get_child_pages(); 
+if($children !== false)
+{
+	while ( $children->have_posts() ) {
+		$children->the_post();
+		$this_title = get_the_title();
+		$this_content = get_the_title();
+		
+		if( 
+			strtolower($this_title) !== 'participant' &&
+		    strtolower($this_title) !== 'documents & readings' 
+		)
+			print_child_page_as_block($this_title, $this_content);
+		else
+		{
+			// especial cases for participant and readings
+			$id = $get_the_ID();
+			$this_children = get_child_pages($id);
+			if($this_children !== false)
+			{
+				$cat_arr = [];
+				$children_arr = [];
+				while ( $this_children->have_posts() ) {
+					$this_children->the_post();
+					$this_child_title = get_the_title();
+					preg_match($bracket_pattern,$this_child_title, $title_arr_temp);
+					$this_arr = array(
+						'id'      => get_the_ID(),
+						'title'   => get_the_title(),
+						'content' => get_the_content()
+					);
+					if(!empty( $title_arr_temp[1] )){
+						$cat_arr[$title_arr_temp[1][0]] = 1;
+						$children_arr[$title_arr_temp[1][0]][] = $this_arr;
+					}
+					else
+						$children_arr[] = $this_arr;
+				}
+			}
+			print_child_page_as_block($this_title, $this_content, $cat_arr, $children_arr);
+		}		
+	}
+	wp_reset_postdata();
+}
+?>

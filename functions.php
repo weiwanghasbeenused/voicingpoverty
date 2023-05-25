@@ -149,6 +149,7 @@ function voicingpoverty_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+	wp_enqueue_script( 'custom-general', get_template_directory_uri() . '/js/custom-general.js', array(), '', true);
 
 	if( is_front_page() )
 		wp_enqueue_script( 'custom-home', get_template_directory_uri() . '/js/custom-home.js', array(), '', true);
@@ -198,37 +199,175 @@ function slug($name = "untitled")
 	return $tmp;
 }
 
-function get_child_pages(){
+function get_child_pages($id = false){
 	global $post;
+	if(!$id)
+		$id = $post->ID;
 	$args = array(
 	    'post_type'      => 'page',
 	    'posts_per_page' => -1,
-	    'post_parent'    => $post->ID,
+	    'post_parent'    => $id,
 	    'order'          => 'ASC'
 	);
 	$children = new WP_Query( $args );
 	if ( $children->have_posts() ){
-		while ( $children->have_posts() ) {
-			$children->the_post();
-			print_child_pages_as_block(get_the_title(), get_the_content());
-		}
+		// wp_reset_postdata();
+		return $children;
 	} 
-	wp_reset_postdata();
+	else
+	{
+		// wp_reset_postdata();
+		return false;
+	}
 }
-function print_child_pages_as_block($title=false, $content=false){
+function get_posts_by_cat($cat_slug, $orderby = 'id', $order = 'DESC'){
+	$args = array(
+		'tax_query' => array(
+		    array(
+		        'taxonomy' => 'category',
+		        'field'    => 'slug',
+		        'terms'    => $cat_slug
+		        ),
+		    ),
+		'posts_per_page' => -1,
+		'orderby' => $orderby,
+		'order' => $order
+	);
+	$posts_by_cat = new WP_Query($args);
+	return $posts_by_cat;
+}
+function get_posts_by_tag($tag_slug, $orderby = 'id', $order = 'DESC'){
+	$args = array(
+		'tax_query' => array(
+		    array(
+		        'taxonomy' => 'post_tag',
+		        'field'    => 'slug',
+		        'terms'    => $tag_slug
+		        ),
+		    ),
+		'posts_per_page' => -1,
+		'orderby' => $orderby,
+		'order' => $order
+	);
+	$posts_by_tag = new WP_Query($args);
+	return $posts_by_tag;
+}
+function print_child_page_as_block($title=false, $content=false, $expanded=false, $page='home', $foldable=true, $extra_class=''){
 	if( $title || $content ){
-	?><section id="<?= slug($title); ?>" class="block section-block wp-block-columns">
-		<div class="wp-block-column" style="flex-basis:25%"><span class="block-toggle-btn" onclick="toggle_block(this)">+</span></div>
-		<div class="wp-block-column block-wrapper" style="flex-basis:75%">
-			<? 
-			if( !empty($title) ){
-				?><h1 class="block-title" onclick="toggle_block(this)"><?= $title; ?></h1><?
-			} 
-			if( !empty($content) ){
-				?><div class="block-content"><?= $content; ?></div><?
-			}
-			?>
+	?><section id="block_<?= slug($title); ?>" class="<?= $page; ?>-block block section-block <?= $expanded ? 'expanded':''; ?> <?= $foldable ? 'foldable':''; ?> <?= !empty($extra_class) ? $extra_class : ''; ?>">
+		<? if(!$foldable){
+			?><header class="block-header wp-block-columns sticky"><?
+		}else{
+			?><header class="block-header wp-block-columns sticky" onclick="toggle_block(this)"><?
+		} ?>
+			<div class="first-column wp-block-column" style=""><span class='block-close-symbol'></span></div>
+			<div class="second-column wp-block-column">
+				<? 
+				if( !empty($title) ){
+					if($page == 'home')
+					{
+						?><h1 class="block-title"><?= $title; ?></h1><?
+					}
+					else if($page == 'participant-portal')
+					{
+						?><h4 class="block-title"><?= $title; ?></h4><?
+					}
+					
+				} 
+				?>
+			</div>
+			<span class="sticky-background"></span>
+			<? if($foldable){
+			?><svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><polygon points="15 6 9 6 9 0 6 0 6 6 0 6 0 9 6 9 6 15 9 15 9 9 15 9 15 6"/></svg><?
+			} ?>
+		</header>
+		<div class="block-body wp-block-columns">
+			<div class="first-column wp-block-column"></div>
+			<div class=" second-column wp-block-column block-content"><?= $content; ?></div>
 		</div>
 	</section><?
 	}
+}
+function get_child_as_list_item($col1, $col2, $item_class, $content, $foldable=true){
+	$output = '<div class="'. $item_class . '">
+		<header class="list-item-header wp-block-columns"';
+	if($foldable)
+		$output .= ' onclick="toggle_listItem(this)"';
+	$output .= ' >
+			<div class="wp-block-column "><p>'. $col1 .'</p></div>
+			<div class="wp-block-column"><p>'. $col2 .'</p></div>
+			<div class="cross"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><polygon points="15 6 9 6 9 0 6 0 6 6 0 6 0 9 6 9 6 15 9 15 9 9 15 9 15 6"/></svg></div>
+		</header>
+		<div class="list-item-body wp-block-columns">
+			<div class="wp-block-column"></div>
+			<div class="wp-block-column list-item-content">'. $content .'</div>
+		</div>
+	</div>
+	<hr class="wp-block-separator" />';
+	return $output;
+}
+
+function get_single_tag($str){
+	$bracket_pattern = '/\[(.*?)\]/';
+	preg_match($bracket_pattern, $str, $output);
+	return $output;
+}
+add_filter( 'the_password_form', 'custom_password_form' );
+function custom_password_form() {
+    global $post;
+    global $returnUrl;
+
+    $label = 'pwbox-'.( empty( $post->ID ) ? rand() : $post->ID );
+    $portal_id = url_to_postid( '/participant-portal' );
+    $o = '<form id="password-form" action="' . esc_url( site_url( 'wp-login.php?action=postpass', 'login_post' ) ) . '" method="post"><p>'.__( "PARTICIPANTS ACCESS CODE").'</p>
+    <label for="' . $label . '"></label><input id="password-input" name="post_password" id="' . $label . '" type="password" size="20" maxlength="20" /><input id="password-submit-btn" type="submit" name="Submit" value="' . esc_attr__( "SUBMIT" ) . '" />';
+    if( isset( $_COOKIE['wp-postpass_' . COOKIEHASH] ) )
+    	$o .= '<p>' . esc_html__( 'Sorry, your password is wrong!') . '</p>'; 
+    $o .= '<p>'.__( "If you are a participants and are have issues logging in, please email us at ") . '<a href="mailto:voicingpoverty@bmcc.cuny.edu">'.__( "voicingpoverty@bmcc.cuny.edu") . '</a>'.__( " to request the access code.").'</p></form>';
+    return $o;
+}
+add_filter( 'post_password_expires', 'mind_set_cookie_expire' );
+function mind_set_cookie_expire() {
+	return 0;
+}
+
+function wpse_58613_comment_redirect( $location ) {
+    if ( isset( $_POST['my_redirect_to'] ) ) // Don't use "redirect_to", internal WP var
+        $location = $_POST['my_redirect_to'];
+
+    return $location;
+}
+
+add_filter( 'comment_post_redirect', 'wpse_58613_comment_redirect' );
+
+function wpb_disable_pdf_previews() { 
+	$fallbacksizes = array(); 
+	return $fallbacksizes; 
+} 
+add_filter('fallback_intermediate_image_sizes', 'wpb_disable_pdf_previews');
+
+class Voicing_Poverty_Comment_Walker extends Walker_Comment {
+    protected function html5_comment( $comment, $depth, $args ) {
+		?><li id="comment-<?php comment_ID(); ?>" <?php comment_class( empty( $args['has_children'] ) ? 'isExtended' : 'parent isExtended' ); ?>>
+		    <div class="media-body">
+			    <?php printf( '<p class="comment-author">%s</p>', get_comment_author_link() ); ?>
+		        <time datetime="<?php comment_time( 'c' ); ?>">
+		                <?php printf( _x( '%1$s at %2$s', '1: date, 2: time' ), get_comment_date(), get_comment_time() ); ?>
+	            </time>
+
+			    <?php if ( '0' == $comment->comment_approved ) : ?>
+			    <p class="comment-awaiting-moderation label label-info"><?php _e( 'Your comment is awaiting moderation.' ); ?></p>
+			    <?php endif; ?>             
+
+			    <div class="wp-column">
+				    <div class="comment-content body-text">
+				         <?php comment_text(); ?>
+				    </div>
+				    <ul class="list-inline">
+				        <?php edit_comment_link( __( 'Edit' ), '<li class="edit-link">', '</li>' ); ?>
+				    </ul>
+				</div>
+		    </div>      
+		<?php
+    }   
 }

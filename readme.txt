@@ -5,16 +5,14 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
 
 Requires at least: 4.5
 Tested up to: 5.4
-Requires PHP: 5.6
+Requires PHP: 7.4^
 Stable tag: 1.0.0
 License: GNU General Public License v2 or later
 License URI: LICENSE
 
-A starter theme called voicingpoverty.
-
 == Description ==
 
-Description
+Non-public custom theme for Voicing Poverty website owned by Cara O'Conner (cara.w.oconner@gmail.com) and team. 
 
 == Installation ==
 

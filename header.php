@@ -9,11 +9,7 @@
  * @package voicingpoverty
  */
 
-$isHome = is_front_page();
-$extra_body_class = '';
-if( $isHome )
-	$extra_body_class .= 'home';
-
+$extra_body_class = 'home';
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -43,11 +39,7 @@ if( $isHome )
 				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
 				<?php
 			endif;
-			$voicingpoverty_description = get_bloginfo( 'description', 'display' );
-			if ( $voicingpoverty_description || is_customize_preview() ) :
-				?>
-				<p class="site-description"><?php echo $voicingpoverty_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-			<?php endif; ?>
+			?>
 		</div><!-- .site-branding -->
 
 		<nav id="site-navigation" class="main-navigation">
