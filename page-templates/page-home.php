@@ -33,9 +33,9 @@ while ( have_posts() ) :
 		?>
 	</div><!-- .entry-content -->
 </article><!-- #post-<?php the_ID(); ?> -->
-<? 
+<?php 
 
-$children = get_child_pages(); 
+$children = voicingpoverty_get_child_pages(); 
 if($children !== false)
 {
 	while ( $children->have_posts() ) {
@@ -44,14 +44,14 @@ if($children !== false)
 			continue;
 		$this_title = get_the_title();
 		$this_content = get_the_content();
-		$isExpanded = slug($this_title) == $expand;
+		$isExpanded = sanitize_title_with_dashes($this_title) == $expand;
 		$isFoldable = true;
 		$extra_class = '';
-		if( slug($this_title) == 'participants' )
+		if( sanitize_title_with_dashes($this_title) == 'participants' )
 		{
 			// especial cases for participant
 			$id = get_the_ID();
-			$this_children = get_child_pages($id);
+			$this_children = voicingpoverty_get_child_pages($id);
 			$html_tab = 'empty';
 			$html_content = 'empty';
 			$isFirstTab = true;
@@ -67,10 +67,10 @@ if($children !== false)
 					if( get_post_status()=='private' )
 						continue;
 					$this_child_title = get_the_title();
-					$this_child_slug = slug($this_child_title);
+					$this_child_slug = sanitize_title_with_dashes($this_child_title);
 					$html_tab .= $isFirstTab ? '<div class="wp-block-column"><a href="#tab-content_'.$this_child_slug.'" class="tab active" tab="'.$this_child_slug.'" onclick="toggle_tab(this); return false;">'.$this_child_title.'</a></div>' : '<div class="wp-block-column"><a href="#tab-content_'.$this_child_slug.'" class="tab" tab="'.$this_child_slug.'" onclick="toggle_tab(this); return false;">'.$this_child_title.'</a></div>';
 					$html_content .= $isFirstTab ? '<div id="tab-content_'.$this_child_slug.'" class="tab-content viewing" >'.get_the_content() : '<div id="tab-content_'.$this_child_slug.'" class="tab-content" >'.get_the_content();
-					$participants = get_posts_by_cat($this_child_slug, 'title', 'ASC');
+					$participants = voicingpoverty_get_posts_by_cat($this_child_slug, 'title', 'ASC');
 					if( $participants->have_posts() )
 					{
 						$isFirst = true;
@@ -93,9 +93,9 @@ if($children !== false)
 							$this_item_class = $isFirst ? 'list-item reading-item foldable small first-item' : 'list-item reading-item foldable small';
 							
 							if($this_name == 'Wei-Hao Wang' || $this_name == 'Olivia de Salve Villedieu')
-								$html_keep .= get_child_as_list_item($this_name, $this_unit, $this_item_class, $this_item_content);
+								$html_keep .= voicingpoverty_get_child_as_list_item($this_name, $this_unit, $this_item_class, $this_item_content);
 							else
-								$html_content .= get_child_as_list_item($this_name, $this_unit, $this_item_class, $this_item_content);
+								$html_content .= voicingpoverty_get_child_as_list_item($this_name, $this_unit, $this_item_class, $this_item_content);
 							if($isFirst == true)
 								$isFirst = false;
 						}
@@ -113,9 +113,9 @@ if($children !== false)
 			$this_content = $html_tab . $html_content;
 			$extra_class .= 'hasExtendingLine';
 		}
-		else if(slug($this_title) == 'documents-038-readings'){
+		else if(sanitize_title_with_dashes($this_title) == 'documents-readings'){
 			$this_content = '<div class="list-container">' . $this_content;
-			$readings = get_posts_by_cat('documents-and-readings', 'title', 'ASC');
+			$readings = voicingpoverty_get_posts_by_cat('documents-and-readings', 'title', 'ASC');
 			$isFirst = true;
 			while ( $readings->have_posts() ) {
 				$foldable = true;
@@ -134,19 +134,19 @@ if($children !== false)
 				$this_item_class = $isFirst ? 'list-item reading-item foldable small first-item' : 'list-item reading-item foldable small';
 				if($isFirst)
 					$this_content .= '<hr class="wp-block-separator" />';
-				$this_content .= get_child_as_list_item($this_reading_author, $this_reading_title, $this_item_class, $this_reading_content, $foldable);
+				$this_content .= voicingpoverty_get_child_as_list_item($this_reading_author, $this_reading_title, $this_item_class, $this_reading_content, $foldable);
 				if($isFirst)
 					$isFirst = false;
 			}
 			$this_content .= '</div>';
 			$extra_class .= 'hasExtendingLine';
 		}
-		else if(slug($this_title) == 'the-hows-038-whys-of-the-institute'){
+		else if(sanitize_title_with_dashes($this_title) == 'the-hows-whys-of-the-institute'){
 			$extra_class .= 'hasExtendingLine';
 		}
-		else if(slug($this_title) == 'contact-us')
+		else if(sanitize_title_with_dashes($this_title) == 'contact-us')
 			$isFoldable = false;
-		print_child_page_as_block($this_title, $this_content, $isExpanded, 'home', $isFoldable, $extra_class);
+		voicingpoverty_print_child_page_as_block($this_title, $this_content, $isExpanded, 'home', $isFoldable, $extra_class);
 	}
 	wp_reset_postdata();
 }
@@ -217,21 +217,21 @@ endwhile; // End of the loop.
 	fill: #FF9648;
 }
 
-#block_the-hows-038-whys-of-the-institute,
-.jsEnabled #block_the-hows-038-whys-of-the-institute.foldable.expanded,
-.noTouchScreen.jsEnabled #block_the-hows-038-whys-of-the-institute.foldable:hover
+#block_the-hows-whys-of-the-institute,
+.jsEnabled #block_the-hows-whys-of-the-institute.foldable.expanded,
+.noTouchScreen.jsEnabled #block_the-hows-whys-of-the-institute.foldable:hover
 {
 	background-color: #D7A700;
 }
 
-.noTouchScreen #block_the-hows-038-whys-of-the-institute.expanded .block-header:hover,
-.noTouchScreen #block_the-hows-038-whys-of-the-institute.expanded a:hover
+.noTouchScreen #block_the-hows-whys-of-the-institute.expanded .block-header:hover,
+.noTouchScreen #block_the-hows-whys-of-the-institute.expanded a:hover
 {
 	color: #FAFF00;
 }
 
-.noTouchScreen #block_the-hows-038-whys-of-the-institute.expanded .block-header:hover .cross,
-.noTouchScreen #block_the-hows-038-whys-of-the-institute.expanded .list-item.expanded .list-item-header:hover .cross
+.noTouchScreen #block_the-hows-whys-of-the-institute.expanded .block-header:hover .cross,
+.noTouchScreen #block_the-hows-whys-of-the-institute.expanded .list-item.expanded .list-item-header:hover .cross
 {
 	fill: #FAFF00;
 }
@@ -262,32 +262,27 @@ endwhile; // End of the loop.
 	fill: #63BDFF;
 }
 
-#block_documents-038-readings,
-.jsEnabled #block_documents-038-readings.foldable.expanded,
-.noTouchScreen.jsEnabled #block_documents-038-readings.foldable:hover
+#block_documents-readings,
+.jsEnabled #block_documents-readings.foldable.expanded,
+.noTouchScreen.jsEnabled #block_documents-readings.foldable:hover
 {
 	background-color: #006837;
 }
-#block_documents-038-readings a{
+#block_documents-readings a{
 	/*color: #24D26A;*/
 }
-.noTouchScreen #block_documents-038-readings.expanded .block-header:hover,
-.noTouchScreen #block_documents-038-readings.expanded a:hover,
-.noTouchScreen #block_documents-038-readings .list-item-header:hover
+.noTouchScreen #block_documents-readings.expanded .block-header:hover,
+.noTouchScreen #block_documents-readings.expanded a:hover,
+.noTouchScreen #block_documents-readings .list-item-header:hover
 {
 	color: #24D26A;
 }
 
-.noTouchScreen #block_documents-038-readings.expanded .block-header:hover .cross,
-.noTouchScreen #block_documents-038-readings.expanded .list-item-header:hover .cross,
-.noTouchScreen #block_documents-038-readings.expanded .slideshow-control-part:hover .arrow-container
+.noTouchScreen #block_documents-readings.expanded .block-header:hover .cross,
+.noTouchScreen #block_documents-readings.expanded .list-item-header:hover .cross,
+.noTouchScreen #block_documents-readings.expanded .slideshow-control-part:hover .arrow-container
 {
 	fill: #24D26A;
-}
-
-.noTouchScreen #block_documents-038-readings .list-item:hover a::after
-{
-	/*background-image: url('<?= get_template_directory_uri(); ?>/media/graphic_rarr-grey.svg');*/
 }
 
 #block_gallery,
@@ -314,9 +309,9 @@ endwhile; // End of the loop.
 }
 
 .jsEnabled #block_about-the-project.foldable,
-.jsEnabled #block_the-hows-038-whys-of-the-institute.foldable,
+.jsEnabled #block_the-hows-whys-of-the-institute.foldable,
 .jsEnabled #block_participants.foldable,
-.jsEnabled #block_documents-038-readings.foldable,
+.jsEnabled #block_documents-readings.foldable,
 .jsEnabled #block_gallery.foldable
 {
 	background-color: var(--bg-color);
@@ -383,7 +378,7 @@ endwhile; // End of the loop.
 	display: inline-block;
 	width: 14px;
 	height: 14px;
-	background-image: url('<?= get_template_directory_uri(); ?>/media/graphic_rarr-light.svg');
+	background-image: url('<?php echo get_template_directory_uri(); ?>/media/graphic_rarr-light.svg');
 	background-size: cover;
 	margin-left: 3px;
 	position: relative;
@@ -397,7 +392,7 @@ endwhile; // End of the loop.
 }
 .noTouchScreen #block_participants .tab-content > .wp-block-columns:hover a::after
 {
-	background-image: url('<?= get_template_directory_uri(); ?>/media/graphic_rarr-lightblue.svg');
+	background-image: url('<?php echo get_template_directory_uri(); ?>/media/graphic_rarr-lightblue.svg');
 }
 #block_contact-us .wp-block-image
 {
@@ -471,5 +466,5 @@ endwhile; // End of the loop.
 	}
 }
 </style>
-<?
+<?php
 	get_footer();

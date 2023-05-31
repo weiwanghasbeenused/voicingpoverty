@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * voicingpoverty functions and definitions
  *
@@ -183,23 +183,23 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
-function slug($name = "untitled")
-{
-	$pattern = '/(\A[^\p{L}\p{N}]+|[^\p{L}\p{N}]+\z)/u';
-	$replace = '';
-	$tmp = preg_replace($pattern, $replace, $name);
+// function slug($name = "untitled")
+// {
+// 	$pattern = '/(\A[^\p{L}\p{N}]+|[^\p{L}\p{N}]+\z)/u';
+// 	$replace = '';
+// 	$tmp = preg_replace($pattern, $replace, $name);
 
-	$pattern = '/[^\p{L}\p{N}]+/u';
-	$replace = '-';
-	$tmp = preg_replace($pattern, $replace, $tmp);
-	$tmp = mb_convert_case($tmp, MB_CASE_LOWER, "UTF-8");
-    $tmp = remove_accents($tmp);
-	$tmp = rawurlencode($tmp);
+// 	$pattern = '/[^\p{L}\p{N}]+/u';
+// 	$replace = '-';
+// 	$tmp = preg_replace($pattern, $replace, $tmp);
+// 	$tmp = mb_convert_case($tmp, MB_CASE_LOWER, "UTF-8");
+//     $tmp = remove_accents($tmp);
+// 	$tmp = rawurlencode($tmp);
 
-	return $tmp;
-}
+// 	return $tmp;
+// }
 
-function get_child_pages($id = false){
+function voicingpoverty_get_child_pages($id = false){
 	global $post;
 	if(!$id)
 		$id = $post->ID;
@@ -220,7 +220,7 @@ function get_child_pages($id = false){
 		return false;
 	}
 }
-function get_posts_by_cat($cat_slug, $orderby = 'id', $order = 'DESC'){
+function voicingpoverty_get_posts_by_cat($cat_slug, $orderby = 'id', $order = 'DESC'){
 	$args = array(
 		'tax_query' => array(
 		    array(
@@ -236,7 +236,7 @@ function get_posts_by_cat($cat_slug, $orderby = 'id', $order = 'DESC'){
 	$posts_by_cat = new WP_Query($args);
 	return $posts_by_cat;
 }
-function get_posts_by_tag($tag_slug, $orderby = 'id', $order = 'DESC'){
+function voicingpoverty_get_posts_by_tag($tag_slug, $orderby = 'id', $order = 'DESC'){
 	$args = array(
 		'tax_query' => array(
 		    array(
@@ -252,43 +252,43 @@ function get_posts_by_tag($tag_slug, $orderby = 'id', $order = 'DESC'){
 	$posts_by_tag = new WP_Query($args);
 	return $posts_by_tag;
 }
-function print_child_page_as_block($title=false, $content=false, $expanded=false, $page='home', $foldable=true, $extra_class=''){
+function voicingpoverty_print_child_page_as_block($title=false, $content=false, $expanded=false, $page='home', $foldable=true, $extra_class=''){
 	if( $title || $content ){
-	?><section id="block_<?= slug($title); ?>" class="<?= $page; ?>-block block section-block <?= $expanded ? 'expanded':''; ?> <?= $foldable ? 'foldable':''; ?> <?= !empty($extra_class) ? $extra_class : ''; ?>">
-		<? if(!$foldable){
-			?><header class="block-header wp-block-columns sticky"><?
+	?><section id="block_<?php echo sanitize_title_with_dashes(esc_attr($title)); ?>" class="<?php echo esc_attr($page); ?>-block block section-block <?php echo $expanded ? 'expanded':''; ?> <?php echo $foldable ? 'foldable':''; ?> <?php echo !empty($extra_class) ? esc_attr($extra_class) : ''; ?>">
+		<?php if(!$foldable){
+			?><header class="block-header wp-block-columns sticky"><?php
 		}else{
-			?><header class="block-header wp-block-columns sticky" onclick="toggle_block(this)"><?
+			?><header class="block-header wp-block-columns sticky" onclick="toggle_block(this)"><?php
 		} ?>
 			<div class="first-column wp-block-column" style=""><span class='block-close-symbol'></span></div>
 			<div class="second-column wp-block-column">
-				<? 
+				<?php 
 				if( !empty($title) ){
 					if($page == 'home')
 					{
-						?><h1 class="block-title"><?= $title; ?></h1><?
+						?><h1 class="block-title"><?php echo esc_attr($title); ?></h1><?php
 					}
 					else if($page == 'participant-portal')
 					{
-						?><h4 class="block-title"><?= $title; ?></h4><?
+						?><h4 class="block-title"><?php echo esc_attr($title); ?></h4><?php
 					}
 					
 				} 
 				?>
 			</div>
 			<span class="sticky-background"></span>
-			<? if($foldable){
-			?><svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><polygon points="15 6 9 6 9 0 6 0 6 6 0 6 0 9 6 9 6 15 9 15 9 9 15 9 15 6"/></svg><?
+			<?php if($foldable){
+			?><svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><polygon points="15 6 9 6 9 0 6 0 6 6 0 6 0 9 6 9 6 15 9 15 9 9 15 9 15 6"/></svg><?php
 			} ?>
 		</header>
 		<div class="block-body wp-block-columns">
 			<div class="first-column wp-block-column"></div>
-			<div class=" second-column wp-block-column block-content"><?= $content; ?></div>
+			<div class=" second-column wp-block-column block-content"><?php echo $content; ?></div>
 		</div>
-	</section><?
+	</section><?php
 	}
 }
-function get_child_as_list_item($col1, $col2, $item_class, $content, $foldable=true){
+function voicingpoverty_get_child_as_list_item($col1, $col2, $item_class, $content, $foldable=true){
 	$output = '<div class="'. $item_class . '">
 		<header class="list-item-header wp-block-columns"';
 	if($foldable)
@@ -307,13 +307,13 @@ function get_child_as_list_item($col1, $col2, $item_class, $content, $foldable=t
 	return $output;
 }
 
-function get_single_tag($str){
+function voicingpoverty_get_single_tag($str){
 	$bracket_pattern = '/\[(.*?)\]/';
 	preg_match($bracket_pattern, $str, $output);
 	return $output;
 }
-add_filter( 'the_password_form', 'custom_password_form' );
-function custom_password_form() {
+add_filter( 'the_password_form', 'voicingpoverty_custom_password_form' );
+function voicingpoverty_custom_password_form() {
     global $post;
     global $returnUrl;
 

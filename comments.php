@@ -29,7 +29,7 @@ if ( post_password_required() ) {
 $post_id = get_the_ID();
 ?>
 
-<div id="comments-<?= $post_id; ?>" class="comments-area">
+<div id="comments-<?php echo $post_id; ?>" class="comments-area">
 
 	<?php
 	// You can start editing here -- including this comment!
@@ -87,7 +87,7 @@ $post_id = get_the_ID();
 	?>
 	<div class="new-comment-wrapper padding-frame">
 		<div class="new-comment">
-		<?
+		<?php
 		$args = array(
 			'title_reply' => 'LEAVE A REPLY<svg onClick="toggle_new_comment(this)" class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><polygon points="15 6 9 6 9 0 6 0 6 6 0 6 0 9 6 9 6 15 9 15 9 9 15 9 15 6"/></svg>',
 			'fields' => array(

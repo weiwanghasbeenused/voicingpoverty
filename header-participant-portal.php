@@ -25,7 +25,7 @@ if(!$isValidated)
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php wp_head(); ?>
-	<? wp_enqueue_style('style-participantPortal', get_template_directory_uri() . '/style-participantPortal.css'); ?>
+	<?php wp_enqueue_style('style-participantPortal', get_template_directory_uri() . '/style-participantPortal.css'); ?>
 </head>
 
 <body <?php body_class($extra_body_class); ?>>

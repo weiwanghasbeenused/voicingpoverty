@@ -1,4 +1,5 @@
 <?php
+
 /* Template Name: password*/ 
 /**
  * Template part for displaying homepage
@@ -12,7 +13,8 @@
 get_header('participant-portal');
 $isValidated = !post_password_required();
 $extra_landing_class = 'block landing-block';
-$logo_url = $isValidated ? '/media/logo_block.png' : '/media/logo_block-reversed.png';
+// $logo_url = $isValidated ? '/media/logo_block.png' : '/media/logo_block-reversed.png';
+$logo_url = '/media/logo_block.png';
 $logo_url = get_template_directory_uri() . $logo_url;
 ?>
 <main id="primary" class="site-main">
@@ -23,46 +25,46 @@ while ( have_posts() ) :
 	$title = get_the_title();
 	if(substr($title, 0, 11) == 'Protected: ')
 		$title = substr($title, 11);
-	$slug = slug($title);
+	$slug = sanitize_title_with_dashes($title);
 	?>
 	
 		<article id="landing-block" <?php post_class($extra_landing_class); ?>>
 			<header class="entry-header wp-block-columns">
 				<div id="landing-block-col-left" class="wp-block-column first-column">
-					<h1 id = "site-name-1" class="site-name"><a href="/"><img src="<?= $logo_url; ?>"></a></h1><a class="has-text-align-center participant-portal-btn" id="participant-portal-btn-1" href="/participant-portal">PARTICIPANT<br>PORTAL</a>
+					<h1 id = "site-name-1" class="site-name"><a href="/"><img src="<?php echo $logo_url; ?>"></a></h1><a class="has-text-align-center participant-portal-btn" id="participant-portal-btn-1" href="/participant-portal">PARTICIPANT<br>PORTAL</a>
 				</div>
 				<div id="landing-block-col-right" class="wp-block-column second-column"></div>
 			</header><!-- .entry-header -->
 		</article>
 		<div class="entry-content"><?php the_content(); ?></div>
-		<?
+		<?php
 		if($isValidated)
 		{
 			?>
 			
-			<div class="entry-content"><?php the_content(); ?></div><? 
+			<div class="entry-content"><?php the_content(); ?></div><?php 
 			if($slug == 'participant-portal')
 			{
-				function print_child_page_as_link($title=false, $url=false, $isExternal=false){
+				function voicingpoverty_print_child_page_as_link($title=false, $url=false, $isExternal=false){
 					if( $title || $url ){
 						if(substr($title, 0, 11) == 'Protected: ')
 							$title = substr($title, 11);
-					?><section id="block_<?= slug($title); ?>" class="block section-link foldable">
-						<a class="block-header wp-block-columns" <?= $url ? 'href="'.$url.'"' : ''; ?> <?= $isExternal ? 'target="_blank"' : ''; ?> >
+					?><section id="block_<?php echo sanitize_title_with_dashes(esc_attr($title)); ?>" class="block section-link foldable">
+						<a class="block-header wp-block-columns" <?php echo $url ? 'href="'.$url.'"' : ''; ?> <?php echo $isExternal ? 'target="_blank"' : ''; ?> >
 							<div class="first-column wp-block-column" style=""></div>
 							<div class="second-column wp-block-column">
-								<? 
+								<?php 
 								if( !empty($title) ){
-									?><h1 class="block-title"><?= $title; ?></h1><span class="arrow-container"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="10.98 18 19 10 10.98 2 8.87 4.11 13.26 8.5 1 8.5 1 11.5 13.27 11.5 8.87 15.89 10.98 18"/></svg></span><?
+									?><h1 class="block-title"><?php echo esc_attr($title); ?></h1><span class="arrow-container"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="10.98 18 19 10 10.98 2 8.87 4.11 13.26 8.5 1 8.5 1 11.5 13.27 11.5 8.87 15.89 10.98 18"/></svg></span><?php
 								} 
 								?>
 							</div>
 							
 						</a>
-					</section><?
+					</section><?php
 					}
 				}
-				$children = get_child_pages(); 
+				$children = voicingpoverty_get_child_pages(); 
 				if($children !== false)
 				{
 					while ( $children->have_posts() ) {
@@ -76,7 +78,7 @@ while ( have_posts() ) :
 						if($this_slug == 'zoom' || $this_slug == 'email' || $this_slug == 'forum')
 						{
 							$this_content = get_the_content();
-							$this_tag_temp = get_single_tag($this_content);
+							$this_tag_temp = voicingpoverty_get_single_tag($this_content);
 							if(isset($this_tag_temp[1]))
 								$this_url = $this_tag_temp[1];
 							else
@@ -86,14 +88,14 @@ while ( have_posts() ) :
 						else
 							$this_url = get_permalink( get_the_ID() );
 						
-						print_child_page_as_link($this_title, $this_url, $isExternal);
+						voicingpoverty_print_child_page_as_link($this_title, $this_url, $isExternal);
 					}
 					wp_reset_postdata();
 				}
 			}
 			else if($slug == 'schedule')
 			{
-				$posts_by_cat = get_posts_by_cat($slug, 'date', 'ASC'); 
+				$posts_by_cat = voicingpoverty_get_posts_by_cat($slug, 'date', 'ASC'); 
 				$isFoldable = true;
 				echo '<section id="default-block" class="participant-portal-block block section-block schedule sticky"><header class="block-header wp-block-columns "><div class="first-column wp-block-column"></div><div class="second-column wp-block-column"><h1 class="block-title">SCHEDULE</h1><h1 onclick="toggle_block(this, false, true);" isViewingAll="false" id="schedule-view-all-btn">View All</h1></div></header></section>';
 				
@@ -109,7 +111,7 @@ while ( have_posts() ) :
 					$this_title = get_the_title();
 					$this_content = get_the_content();
 					$this_readings_tag = date('m-d-Y', strtotime($this_title));
-					$readings = get_posts_by_tag($this_readings_tag, 'date', 'ASC');
+					$readings = voicingpoverty_get_posts_by_tag($this_readings_tag, 'date', 'ASC');
 					$isFirst = true;
 					preg_match($pattern_readings_and_resources, $this_content, $temp_arr);
 					$includeReadingAndResources = !empty($temp_arr);
@@ -147,7 +149,7 @@ while ( have_posts() ) :
 									$this_item_foldable = true;
 									$this_item_class .= ' foldable';
 								}
-								$reading_html .= get_child_as_list_item($this_reading_author, $this_reading_title, $this_item_class, $this_reading_content, $this_item_foldable);
+								$reading_html .= voicingpoverty_get_child_as_list_item($this_reading_author, $this_reading_title, $this_item_class, $this_reading_content, $this_item_foldable);
 								if($isFirst)
 									$isFirst = false;
 							}
@@ -161,35 +163,35 @@ while ( have_posts() ) :
 						}						
 					}
 					
-					print_child_page_as_block($this_title, $this_content, false, 'participant-portal', $isFoldable, 'hasExtendingLine schedule');
+					voicingpoverty_print_child_page_as_block($this_title, $this_content, false, 'participant-portal', $isFoldable, 'hasExtendingLine schedule');
 				}
 			}
 			else if($slug == 'blog')
 			{
-				$posts_by_cat = get_posts_by_cat($slug); 
+				$posts_by_cat = voicingpoverty_get_posts_by_cat($slug); 
 
-				function print_child_page_as_blog($title=false, $content=false, $op=false, $date=false){
-					?><article id="blog_<?= slug($title); ?>" class="block participant-portal-block section-block blog-block expanded">
+				function voicingpoverty_print_child_page_as_blog($title=false, $content=false, $op=false, $date=false){
+					?><article id="blog_<?php echo sanitize_title_with_dashes(esc_attr($title)); ?>" class="block participant-portal-block section-block blog-block expanded">
 						<header class="block-header wp-block-columns sticky isExtended">
 							<div class="first-column wp-block-column" style=""></div>
 							<div class="second-column wp-block-column block-title">
-								<h1 class="blog-op large"><?= $op; ?></h1><h1 class="blog-date large"><?= $date; ?></h1>
+								<h1 class="blog-op large"><?php echo $op; ?></h1><h1 class="blog-date large"><?php echo $date; ?></h1>
 							</div>
 							<div class="block-header-background"></div>
 						</header>
 						<div class="block-body wp-block-columns">
 							<div class="first-column wp-block-column"></div>
 							<div class="block-content second-column wp-block-column">
-								<h4><?= $title; ?></h4>
-								<?= $content; ?>
-								<? if ( comments_open() || get_comments_number() ) :
-									?><hr class="comment-separator wp-block-separator" /><?
+								<h4><?php echo esc_attr($title); ?></h4>
+								<?php echo $content; ?>
+								<?php if ( comments_open() || get_comments_number() ) :
+									?><hr class="comment-separator wp-block-separator" /><?php
 									comments_template();
 								endif; ?>
 							</div>
 						</div>
 
-					</article><?
+					</article><?php
 				}
 				echo '<section id="default-block" class="participant-portal-block block section-block blog sticky"><header class="block-header wp-block-columns "><div class="first-column wp-block-column"></div><div class="second-column wp-block-column"><h1 class="block-title">BLOG</h1><h1 id="submit-entries-btn"><a href="mailto:voicingpoverty@bmcc.cuny.edu">Submit Entries</a></h1><h1 id="date-filter">Date <span id="date-filter-asc" onclick="reverse_blog(this, sPost_block);" class="date-filter-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="2 10.98 10 19 18 10.98 15.89 8.87 11.5 13.26 11.5 1 8.5 1 8.5 13.27 4.11 8.87 2 10.98"/></svg></span><span id="date-filter-desc" onclick="reverse_blog(this, sPost_block);" class="date-filter-btn active"><svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="18 9.02 10 1 2 9.02 4.11 11.13 8.5 6.74 8.5 19 11.5 19 11.5 6.74 15.89 11.13 18 9.02"/></svg></span></h1></div></header></section>';
 
@@ -198,12 +200,12 @@ while ( have_posts() ) :
 					$posts_by_cat->the_post();
 					if( get_post_status()=='private' )
 						continue;
-					$this_title = get_the_title();
+					$this_title = esc_attr(get_the_title());
 					$this_content = '<div class="list-container">' . get_the_content() . '</div>';
 					$this_op = get_the_excerpt();
 					$this_date = get_the_date('F d, Y');
 						
-					print_child_page_as_blog($this_title, $this_content, $this_op, $this_date);
+					voicingpoverty_print_child_page_as_blog($this_title, $this_content, $this_op, $this_date);
 				}
 				echo '</div>';
 			}
@@ -526,7 +528,7 @@ table
 
 #password-form
 {
-	padding: 0 20px;
+	padding: 20px;
 }
 #password-input
 {
@@ -540,14 +542,15 @@ table
 	display: block;
 	-webkit-appearance: none;
     appearance: none;
-    background-color: transparent;
+    background-color: #000;
     color: var(--bg-color);
-    border: 2px solid var(--bg-color);
+    border: 2px solid;
     border-radius: 50%;
     padding: 15px 0;
     width: 155px;
     margin: 20px 0;
     cursor: pointer;
+	font-weight: 700;
 }
 .noTouchScreen #password-submit-btn:hover
 {
@@ -743,5 +746,5 @@ table
 		}
 	}
 </script>
-<?
+<?php
 get_footer();

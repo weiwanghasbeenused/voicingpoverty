@@ -56,9 +56,9 @@ if( $isHome )
 		</footer><!-- .entry-footer -->
 	<?php endif; ?>
 </article><!-- #post-<?php the_ID(); ?> -->
-<? 
+<?php
 $bracket_pattern = '/\[.*?\]/g';
-$children = get_child_pages(); 
+$children = voicingpoverty_get_child_pages(); 
 if($children !== false)
 {
 	while ( $children->have_posts() ) {
@@ -70,12 +70,12 @@ if($children !== false)
 			strtolower($this_title) !== 'participant' &&
 		    strtolower($this_title) !== 'documents & readings' 
 		)
-			print_child_page_as_block($this_title, $this_content);
+			voicingpoverty_print_child_page_as_block($this_title, $this_content);
 		else
 		{
 			// especial cases for participant and readings
 			$id = $get_the_ID();
-			$this_children = get_child_pages($id);
+			$this_children = voicingpoverty_get_child_pages($id);
 			if($this_children !== false)
 			{
 				$cat_arr = [];
@@ -97,7 +97,7 @@ if($children !== false)
 						$children_arr[] = $this_arr;
 				}
 			}
-			print_child_page_as_block($this_title, $this_content, $cat_arr, $children_arr);
+			voicingpoverty_print_child_page_as_block($this_title, $this_content, $cat_arr, $children_arr);
 		}		
 	}
 	wp_reset_postdata();
