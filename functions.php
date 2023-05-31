@@ -211,12 +211,12 @@ function voicingpoverty_get_child_pages($id = false){
 	);
 	$children = new WP_Query( $args );
 	if ( $children->have_posts() ){
-		// wp_reset_postdata();
+		wp_reset_postdata();
 		return $children;
 	} 
 	else
 	{
-		// wp_reset_postdata();
+		wp_reset_postdata();
 		return false;
 	}
 }
