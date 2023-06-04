@@ -468,3 +468,4 @@ endwhile; // End of the loop.
 </style>
 <?php
 	get_footer();
+?>

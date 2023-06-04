@@ -747,4 +747,5 @@ table
 	}
 </script>
 <?php
-get_footer();
+	get_footer();
+?>
