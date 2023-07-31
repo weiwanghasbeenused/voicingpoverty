@@ -1,6 +1,6 @@
 === voicingpoverty ===
 
-Contributors: automattic
+Contributors: automattic, wei-hao wang
 Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
 
 Requires at least: 4.5
