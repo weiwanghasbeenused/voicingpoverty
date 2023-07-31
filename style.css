@@ -68,7 +68,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
          url('fonts/suisse/SuisseIntl-MediumItalic-WebXL.woff2') format('woff2'),
          url('fonts/suisse/SuisseIntl-MediumItalic-WebXL.woff') format('woff'),
          url('fonts/suisse/SuisseIntl-MediumItalic-WebXL.ttf') format('truetype'),
-         url('fonts/suisse/SuisseIntl-MediumItalic-WebXL.svg#helveticaneuer-medium') format('svg');
+         url('fonts/suisse/SuisseIntl-MediumItalic-WebXL.svg#suisse-medium') format('svg');
     font-weight: 500;
     font-style: italic;
 }
@@ -94,28 +94,6 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
     font-weight: 400;
     font-style: italic;
 }
-/*@font-face {
-    font-family: 'suisse';
-    src: url('fonts/suisse/SuisseIntl-Light-WebM.eot');
-    src: url('fonts/suisse/SuisseIntl-Light-WebM.eot?#iefix') format('embedded-opentype'),
-         url('fonts/suisse/SuisseIntl-Light-WebM.woff2') format('woff2'),
-         url('fonts/suisse/SuisseIntl-Light-WebM.woff') format('woff'),
-         url('fonts/suisse/SuisseIntl-Light-WebM.ttf') format('truetype'),
-         url('fonts/suisse/SuisseIntl-Light-WebM.svg#suisse-regular') format('svg');
-    font-weight: 300;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'suisse';
-    src: url('fonts/suisse/SuisseIntl-LightItalic-WebM.eot');
-    src: url('fonts/suisse/SuisseIntl-LightItalic-WebM.eot?#iefix') format('embedded-opentype'),
-         url('fonts/suisse/SuisseIntl-LightItalic-WebM.woff2') format('woff2'),
-         url('fonts/suisse/SuisseIntl-LightItalic-WebM.woff') format('woff'),
-         url('fonts/suisse/SuisseIntl-LightItalic-WebM.ttf') format('truetype'),
-         url('fonts/suisse/SuisseIntl-LightItalic-WebM.svg#suisse-regular') format('svg');
-    font-weight: 300;
-    font-style: italic;
-}*/
 @font-face {
     font-family: 'suisse';
     src: url('fonts/suisse/SuisseIntl-SemiBold-WebS.eot');
